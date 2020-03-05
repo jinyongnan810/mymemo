@@ -9,3 +9,4 @@ class Memo(models.Model):
     image_list = models.TextField()
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+    
