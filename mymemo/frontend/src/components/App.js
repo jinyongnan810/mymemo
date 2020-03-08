@@ -1,8 +1,12 @@
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
-// import { Provider as AlertProvider } from "react-alert";
-// import AlertTemplate from "react-alert-template-basic";
-// import { Provider } from "react-redux";
+import { Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+import { Provider } from "react-redux";
+import Header from "./layouts/Header";
+import List from "./layouts/List";
+import Content from "./layouts/Content";
+import store from "../store";
 // import {
 //     HashRouter as Router,
 //     Route,
@@ -17,9 +21,14 @@ export class App extends Component {
     }
     render() {
         return (
-            <div>
-                Hello world
-            </div>
+            <Provider store={store}>
+                <Fragment>
+                    <Header />
+                    <List />
+                    <Content />
+                </Fragment>
+            </Provider>
+
         )
     }
 }
