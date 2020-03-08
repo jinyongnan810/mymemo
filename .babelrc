@@ -4,6 +4,6 @@
         "@babel/preset-react"
     ],
     "plugins": [
-        "transfrom-class-properties"
+        "@babel/plugin-proposal-class-properties"
     ]
 }
