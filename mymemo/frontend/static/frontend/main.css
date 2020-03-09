@@ -11,6 +11,34 @@
     font-size: 0.75rem;
     text-transform: uppercase;
 }
+.memo-item{
+    position: relative;
+    height: 100px;
+    width: 100%;
+}
 .memo-item:hover {
     background: #eee;
+}
+.memo-title{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    text-decoration: none !important;
+}
+.edit-title,.edit-title-done {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.edit-title-done {
+    display: block !important;
+}
+.edit-title:hover,.edit-title-done:hover {
+    color: #0056b3;
+}
+.memo-item:hover .edit-title{
+    display: block;
 }

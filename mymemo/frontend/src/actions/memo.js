@@ -18,3 +18,27 @@ export const getMemos = () => (dispatch, getState) => {
             // });
         });
 };
+
+export const saveMemo = (data) => (dispatch, getState) => {
+    axios
+        .get(`/api/memos/${data.id}/`)
+        .then((res) => {
+            const memo = res.data;
+            memo.title = data.title;
+            memo.content = data.content;
+            console.log(`data:${JSON.stringify(data)}`)
+            console.log(`memo:${JSON.stringify(memo)}`)
+            axios
+                .put(`/api/memos/${memo.id}/`, memo)
+                .then((res) => {
+                    dispatch({ type: UPDATE_MEMO, payload: res.data });
+                })
+                .catch((err) => {
+                    console.log(`err:${JSON.stringify(err)}`)
+                    // dispatch(returnErrors(err.response.data, err.response.status));
+                });
+        })
+        .catch((err) => {
+            // dispatch(returnErrors(err.response.data, err.response.status));
+        });
+};
