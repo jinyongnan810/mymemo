@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 export class Content extends Component {
     render() {
         return (
-            <div className="col-9 m-container">
-                content
-            </div>
+            <main className="col-10 ml-auto px-4" role="main">
+                <h1>hello world</h1>
+            </main>
         )
     }
 }

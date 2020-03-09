@@ -7,6 +7,7 @@ import Header from "./layouts/Header";
 import List from "./layouts/List";
 import Content from "./layouts/Content";
 import store from "../store";
+import Dashboard from "./layouts/Dashboard";
 // import {
 //     HashRouter as Router,
 //     Route,
@@ -24,8 +25,7 @@ export class App extends Component {
             <Provider store={store}>
                 <Fragment>
                     <Header />
-                    <List />
-                    <Content />
+                    <Dashboard />
                 </Fragment>
             </Provider>
 
