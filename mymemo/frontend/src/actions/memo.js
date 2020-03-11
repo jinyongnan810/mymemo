@@ -31,7 +31,7 @@ export const saveMemo = (data) => (dispatch, getState) => {
             axios
                 .put(`/api/memos/${memo.id}/`, memo)
                 .then((res) => {
-                    dispatch({ type: UPDATE_MEMO, payload: res.data });
+                    dispatch({ type: types.UPDATE_MEMO, payload: res.data });
                 })
                 .catch((err) => {
                     console.log(`err:${JSON.stringify(err)}`)

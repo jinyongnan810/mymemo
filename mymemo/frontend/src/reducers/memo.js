@@ -7,9 +7,9 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case types.GET_MEMOS: {
-            return { ...state, memos: action.payload }
+            return { currentMemo: {}, memos: action.payload }
         }
-        case types.UPDATE_MEMOS: {
+        case types.UPDATE_MEMO: {
             const newMemo = action.payload;
             state.memos.find(memo => {
                 if (memo.id == newMemo.id) {
@@ -19,9 +19,19 @@ export default (state = initialState, action) => {
                 }
                 return false;
             });
-
             return state;
         }
+        case types.SELECT_MEMO: {
+            const id = action.payload;
+            state.memos.find(memo => {
+                if (memo.id == id) {
+                    state.currentMemo = memo;
+                    return true;
+                } else return false;
+            })
+            return { ...state, currentMemo: state.currentMemo };
+        }
+
         default: return state;
     }
 };

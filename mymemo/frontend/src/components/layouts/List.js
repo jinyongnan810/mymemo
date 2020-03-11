@@ -5,23 +5,35 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { getMemos, saveMemo } from '../../actions/memo'
 import store from "../../store";
+import * as types from "../../actions/types"
 export class List extends Component {
     static propTypes = {
         memos: PropTypes.array.isRequired,
+        currentMemo: PropTypes.object.isRequired,
         getMemos: PropTypes.func.isRequired,
         saveMemo: PropTypes.func.isRequired,
     }
-    state = {}
+    state = { currentId: null }
+    componentDidUpdate(preProps) {
+        if (preProps.currentMemo != this.props.currentMemo) {
+            this.setState({ currentId: this.props.currentMemo.id })
+        }
+    }
     componentDidMount() {
         this.props.getMemos();
     }
-    startEditTitle = (id) => {
+    selectMemo = (id) => {
+        store.dispatch({ type: types.SELECT_MEMO, payload: id })
+    }
+    startEditTitle = (e, id) => {
+        e.stopPropagation();
         const newState = {};
         newState[id + '-titleEdit'] = true
         this.setState(newState)
         $(`#memo-${id}`).focus();
     }
-    endEditTitle = (id) => {
+    endEditTitle = (e, id) => {
+        e.stopPropagation();
         const newState = {};
         newState[id + '-titleEdit'] = false
         this.setState(newState);
@@ -51,14 +63,14 @@ export class List extends Component {
 
                         {
                             this.props.memos.map(memo => (
-                                <li className="memo-item px-3" key={memo.id}>
+                                <li className={memo.id == this.state.currentId ? "memo-active memo-item px-3" : "memo-item px-3"} key={memo.id} onClick={() => this.selectMemo(memo.id)}>
                                     <a className="active memo-title" id={"memo-" + memo.id} href="#" contentEditable={this.state[memo.id + '-titleEdit'] ? 'true' : 'false'}>
                                         {memo.title}
                                     </a>
                                     {
                                         this.state[memo.id + '-titleEdit'] ?
-                                            (<div className="edit-title-done" onClick={() => this.endEditTitle(memo.id)}>done</div>)
-                                            : (<div className="edit-title" onClick={() => this.startEditTitle(memo.id)} >edit</div>)
+                                            (<div className="edit-title-done" onClick={(e) => this.endEditTitle(e, memo.id)}>done</div>)
+                                            : (<div className="edit-title" onClick={(e) => this.startEditTitle(e, memo.id)} >edit</div>)
                                     }
 
 
@@ -74,7 +86,8 @@ export class List extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    memos: state.memos.memos
+    memos: state.memos.memos,
+    currentMemo: state.memos.currentMemo
 })
 
 export default connect(mapStateToProps, { getMemos, saveMemo })(List)

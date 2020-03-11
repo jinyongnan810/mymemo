@@ -15,9 +15,16 @@
     position: relative;
     height: 100px;
     width: 100%;
+    transition: all 0.5s;
 }
 .memo-item:hover {
     background: #eee;
+}
+.memo-item.memo-active {
+    background-color: skyblue;
+    color:white;
+    border:1px deepskyblue;
+    box-shadow: 5px 5px 5px black;
 }
 .memo-title{
     position: relative;
