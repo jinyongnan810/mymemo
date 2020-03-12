@@ -24,10 +24,10 @@ export const saveMemo = (data) => (dispatch, getState) => {
         .get(`/api/memos/${data.id}/`)
         .then((res) => {
             const memo = res.data;
-            memo.title = data.title;
-            memo.content = data.content;
-            console.log(`data:${JSON.stringify(data)}`)
-            console.log(`memo:${JSON.stringify(memo)}`)
+            if (data.title)
+                memo.title = data.title;
+            if (data.content)
+                memo.content = data.content;
             axios
                 .put(`/api/memos/${memo.id}/`, memo)
                 .then((res) => {

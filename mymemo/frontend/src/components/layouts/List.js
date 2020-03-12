@@ -41,7 +41,7 @@ export class List extends Component {
         const title = $(`#memo-${id}`).html().replace('<br>', '').trim();
         if (title) {
             console.log(`title:${title}.`)
-            this.props.saveMemo({ id: memo.id, title: title, content: memo.content });
+            this.props.saveMemo({ id: memo.id, title: title });
         } else {
             $(`#memo-${id}`).html(memo.title);
         }

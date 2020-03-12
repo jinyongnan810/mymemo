@@ -5,7 +5,7 @@ import Content from './Content'
 export class Dashboard extends Component {
     render() {
         return (
-            <div className="container-fluid pt-5">
+            <div className="container-fluid pt-5 h100">
                 <div className="row">
                     <List />
                     <Content />
