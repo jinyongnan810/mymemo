@@ -12,6 +12,11 @@ export class Content extends Component {
     componentDidUpdate(preProps) {
         if (preProps.currentMemo != this.props.currentMemo) {
             if (this.props.currentMemo) {
+                if (this.state.editing) {
+                    const newContent = $(".memo-editor").val()
+                    this.props.saveMemo({ id: this.state.id, content: newContent });
+                    this.setState({ editing: false })
+                }
                 this.setState({ id: this.props.currentMemo.id, content: this.props.currentMemo.content, editing: false })
             } else {
                 this.setState({ id: null, content: null, editing: false })

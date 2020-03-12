@@ -18,7 +18,18 @@ export const getMemos = () => (dispatch, getState) => {
             // });
         });
 };
-
+export const addMemo = (data) => (dispatch, getState) => {
+    const memo = { title: 'temp title', content: '' }
+    axios
+        .post(`/api/memos/`, memo)
+        .then((res) => {
+            dispatch({ type: types.ADD_MEMO, payload: res.data });
+        })
+        .catch((err) => {
+            console.log(`err:${JSON.stringify(err)}`)
+            // dispatch(returnErrors(err.response.data, err.response.status));
+        });
+};
 export const saveMemo = (data) => (dispatch, getState) => {
     axios
         .get(`/api/memos/${data.id}/`)

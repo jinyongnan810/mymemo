@@ -75,7 +75,6 @@
     position: relative;
     z-index: inherit;
     border:none;
-    box-shadow: 0px 0px 5px 5px gainsboro;
     width: 100%;
     min-height: 100%;
     padding: 3px;
