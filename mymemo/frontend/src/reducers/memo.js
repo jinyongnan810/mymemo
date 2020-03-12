@@ -8,12 +8,9 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case types.GET_MEMOS: {
             const memos = action.payload;
-            console.log(`before:${JSON.stringify(memos.map(memo => memo.title))}|${JSON.stringify(memos.map(memo => memo.update_at))}`)
             const sorted = memos.sort((a, b) => {
                 return new Date(b.update_at) - new Date(a.update_at);
             })
-            console.log(`after:${JSON.stringify(sorted.map(sorted => sorted.title))}|${JSON.stringify(sorted.map(sorted => sorted.update_at))}`)
-
             return { currentMemo: {}, memos: sorted }
         }
         case types.ADD_MEMO: {
@@ -32,6 +29,24 @@ export default (state = initialState, action) => {
                 return false;
             });
             return state;
+        }
+        case types.DELETE_MEMO: {
+            const id = action.payload;
+            const oldMemos = state.memos.slice();
+            const index = oldMemos.findIndex(memo => {
+                if (memo.id == id) {
+                    return true;
+                }
+                return false;
+            })
+            if (index > -1) {
+                oldMemos.splice(index, 1);
+            }
+
+            if (state.currentMemo.id == id) {
+                state.currentMemo = {}
+            }
+            return { memos: oldMemos, currentMemo: state.currentMemo };
         }
         case types.SELECT_MEMO: {
             const id = action.payload;

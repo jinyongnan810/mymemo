@@ -16,6 +16,8 @@
     height: 100px;
     width: 100%;
     transition: all 0.5s;
+    padding: 10px;
+
 }
 .memo-item:hover {
     background: #eee;
@@ -35,9 +37,11 @@
 .edit-title,.edit-title-done {
     display: none;
     position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    text-align: center;
+    width: 50px;
+    right: 50%;
+    bottom: 5px;
+    transform: translateX(50%);
     cursor: pointer;
 }
 .edit-title-done {
@@ -45,6 +49,26 @@
 }
 .edit-title:hover,.edit-title-done:hover {
     color: #0056b3;
+}
+.memo-delete {
+    display: none;
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 25px;
+    font-weight: bolder;
+    z-index: 100;
+    cursor: pointer;
+}
+
+.memo-item:hover .memo-delete  {
+    display: block;
+}
+.memo-item:hover .memo-delete:hover {
+    color: red;
 }
 .memo-item:hover .edit-title{
     display: block;

@@ -30,6 +30,17 @@ export const addMemo = (data) => (dispatch, getState) => {
             // dispatch(returnErrors(err.response.data, err.response.status));
         });
 };
+export const deleteMemo = (data) => (dispatch, getState) => {
+    axios
+        .delete(`/api/memos/${data}/`)
+        .then((res) => {
+            dispatch({ type: types.DELETE_MEMO, payload: data });
+        })
+        .catch((err) => {
+            console.log(`err:${JSON.stringify(err)}`)
+            // dispatch(returnErrors(err.response.data, err.response.status));
+        });
+};
 export const saveMemo = (data) => (dispatch, getState) => {
     axios
         .get(`/api/memos/${data.id}/`)

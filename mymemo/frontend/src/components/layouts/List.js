@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { getMemos, saveMemo, addMemo } from '../../actions/memo'
+import { getMemos, saveMemo, addMemo, deleteMemo } from '../../actions/memo'
 import store from "../../store";
 import * as types from "../../actions/types"
 export class List extends Component {
@@ -49,6 +49,12 @@ export class List extends Component {
     addMemo = () => {
         this.props.addMemo();
     }
+    delMemo = (e, id) => {
+        e.stopPropagation();
+        if (confirm('Are you sure to delete this memo?')) {
+            this.props.deleteMemo(id);
+        }
+    }
     render() {
         return (
             <nav className="col-2 d-none d-block bg-light sidebar">
@@ -68,12 +74,15 @@ export class List extends Component {
                                 <li className={memo.id == this.state.currentId ? "memo-active memo-item px-3" : "memo-item px-3"} key={memo.id} onClick={() => this.selectMemo(memo.id)}>
                                     <a className="active memo-title" id={"memo-" + memo.id} href="#" contentEditable={this.state[memo.id + '-titleEdit'] ? 'true' : 'false'}>
                                         {memo.title}
+
                                     </a>
                                     {
                                         this.state[memo.id + '-titleEdit'] ?
                                             (<div className="edit-title-done" onClick={(e) => this.endEditTitle(e, memo.id)}>done</div>)
                                             : (<div className="edit-title" onClick={(e) => this.startEditTitle(e, memo.id)} >edit</div>)
                                     }
+
+                                    <div className="memo-delete" onClick={(e) => { this.delMemo(e, memo.id) }}>×</div>
 
 
                                 </li>
@@ -92,4 +101,4 @@ const mapStateToProps = (state) => ({
     currentMemo: state.memos.currentMemo
 })
 
-export default connect(mapStateToProps, { getMemos, saveMemo, addMemo })(List)
+export default connect(mapStateToProps, { getMemos, saveMemo, addMemo, deleteMemo })(List)
