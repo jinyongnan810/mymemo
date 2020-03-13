@@ -2,7 +2,8 @@ import * as types from "../actions/types";
 
 const initialState = {
     memos: [],
-    currentMemo: {}
+    currentMemo: {},
+    searching: ""
 };
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -11,7 +12,7 @@ export default (state = initialState, action) => {
             const sorted = memos.sort((a, b) => {
                 return new Date(b.update_at) - new Date(a.update_at);
             })
-            return { currentMemo: {}, memos: sorted }
+            return { ...state, currentMemo: {}, memos: sorted }
         }
         case types.ADD_MEMO: {
             const newMemo = action.payload;
@@ -20,7 +21,8 @@ export default (state = initialState, action) => {
         }
         case types.UPDATE_MEMO: {
             const newMemo = action.payload;
-            state.memos.find(memo => {
+            const memos = state.memos.slice();
+            memos.find(memo => {
                 if (memo.id == newMemo.id) {
                     memo.title = newMemo.title;
                     memo.content = newMemo.content;
@@ -28,7 +30,12 @@ export default (state = initialState, action) => {
                 }
                 return false;
             });
-            return state;
+            if (state.currentMemo.id == newMemo.id) {
+                return { ...state, memos: memos, currentMemo: newMemo };
+            } else {
+                return { ...state, memos: memos };
+            }
+
         }
         case types.DELETE_MEMO: {
             const id = action.payload;
@@ -46,7 +53,7 @@ export default (state = initialState, action) => {
             if (state.currentMemo.id == id) {
                 state.currentMemo = {}
             }
-            return { memos: oldMemos, currentMemo: state.currentMemo };
+            return { ...state, memos: oldMemos, currentMemo: state.currentMemo };
         }
         case types.SELECT_MEMO: {
             const id = action.payload;
@@ -56,9 +63,11 @@ export default (state = initialState, action) => {
                     return true;
                 } else return false;
             })
-            return { ...state, currentMemo: state.currentMemo };
+            return { ...state, ...state, currentMemo: state.currentMemo };
         }
-
+        case types.SEARCH_CHANGED: {
+            return { ...state, searching: action.payload }
+        }
         default: return state;
     }
 };

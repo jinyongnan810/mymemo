@@ -13,7 +13,7 @@ export class List extends Component {
         getMemos: PropTypes.func.isRequired,
         saveMemo: PropTypes.func.isRequired,
     }
-    state = { currentId: null }
+    state = { currentId: null, search: null, marking: {} }
     componentDidUpdate(preProps) {
         if (preProps.currentMemo != this.props.currentMemo) {
             this.setState({ currentId: this.props.currentMemo.id })
@@ -30,7 +30,6 @@ export class List extends Component {
         const newState = {};
         newState[id + '-titleEdit'] = true
         this.setState(newState)
-        $(`#memo-${id}`).focus();
     }
     endEditTitle = (e, id) => {
         e.stopPropagation();
@@ -55,12 +54,31 @@ export class List extends Component {
             this.props.deleteMemo(id);
         }
     }
+    search = (text, e) => {
+        const searchText = text.trim();
+        const newMarking = {};
+        if (searchText) {
+            this.props.memos.map(memo => {
+                if (memo.title.toUpperCase().indexOf(searchText.toUpperCase()) > -1 || memo.content.toUpperCase().indexOf(searchText.toUpperCase()) > -1) {
+                    newMarking[memo.id] = true;
+                } else {
+                    newMarking[memo.id] = false;
+                }
+            })
+        }
+        this.setState({ marking: newMarking });
+        if (e) {
+            store.dispatch({ type: types.SEARCH_CHANGED, payload: text })
+        }
+
+    }
+
     render() {
         return (
             <nav className="col-2 d-none d-block bg-light sidebar">
                 <div className="sidebar-sticky">
                     <ul className="nav flex-column">
-                        <input className="form-control form-control-dark col-11 mx-auto" aria-label="Search" type="text" placeholder="Search"></input>
+                        <input id="memo-search" onChange={(e) => this.search(e.target.value, e)} className="form-control form-control-dark col-11 mx-auto" aria-label="Search" type="text" placeholder="Search"></input>
                         <h6 className="sidebar-heading d-flex mx-auto px-3 mt-1 mb-1 text-muted">
                             <a className="d-flex align-items-center text-muted text-decoration-none" aria-label="Add a new report" href="#" onClick={() => this.addMemo()}>
                                 <span>Add Memo</span>&nbsp;&nbsp;
@@ -71,10 +89,9 @@ export class List extends Component {
 
                         {
                             this.props.memos.map(memo => (
-                                <li className={memo.id == this.state.currentId ? "memo-active memo-item px-3" : "memo-item px-3"} key={memo.id} onClick={() => this.selectMemo(memo.id)}>
-                                    <a className="active memo-title" id={"memo-" + memo.id} href="#" contentEditable={this.state[memo.id + '-titleEdit'] ? 'true' : 'false'}>
+                                <li className={memo.id == this.state.currentId ? ("memo-active memo-item px-3 " + (this.state.marking[memo.id] ? "memo-marking" : "")) : ("memo-item px-3 " + (this.state.marking[memo.id] ? "memo-marking" : ""))} key={memo.id} id={memo.id} onClick={() => this.selectMemo(memo.id)}>
+                                    <a className="memo-title" id={"memo-" + memo.id} href="#" contentEditable={this.state[memo.id + '-titleEdit'] ? 'true' : 'false'} >
                                         {memo.title}
-
                                     </a>
                                     {
                                         this.state[memo.id + '-titleEdit'] ?

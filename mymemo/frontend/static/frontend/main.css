@@ -127,3 +127,10 @@ body {
     position: relative;
     height: 100%;
 }
+.memo-marking {
+    background-color: orange;
+    box-shadow: 0 0 5px 5px orange !important;
+}
+.memo-marking-word {
+    background-color: orange;
+}
