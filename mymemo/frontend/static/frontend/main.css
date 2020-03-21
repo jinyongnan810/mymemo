@@ -134,3 +134,31 @@ body {
 .memo-marking-word {
     background-color: orange;
 }
+.memo-file-drop {
+    position: fixed;
+    display: none;
+    right: 0;
+    top: 0;
+    width: 600px;
+    height: 100%;
+    z-index: 100;
+    opacity: 0;
+
+}
+.memo-file-drop span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: #eee;
+    font-size:20px;
+    font-weight: bolder;
+    width: 250px;
+    text-align: center;
+}
+.memo-file-drop-dragenter {
+    display: block;
+    opacity: 1;
+    background-color: rgba(0,0,0,0.2);
+    box-shadow:  0 0 5px 5px black !important;
+}

@@ -18,10 +18,10 @@ export const getMemos = () => (dispatch, getState) => {
             // });
         });
 };
-export const addMemo = (data) => (dispatch, getState) => {
+export const addMemo = (config) => (dispatch, getState) => {
     const memo = { title: 'temp title', content: '' }
     axios
-        .post(`/api/memos/`, memo)
+        .post(`/api/memos/`, memo, config)
         .then((res) => {
             dispatch({ type: types.ADD_MEMO, payload: res.data });
         })
@@ -30,9 +30,9 @@ export const addMemo = (data) => (dispatch, getState) => {
             // dispatch(returnErrors(err.response.data, err.response.status));
         });
 };
-export const deleteMemo = (data) => (dispatch, getState) => {
+export const deleteMemo = (data, config) => (dispatch, getState) => {
     axios
-        .delete(`/api/memos/${data}/`)
+        .delete(`/api/memos/${data}/`, config)
         .then((res) => {
             dispatch({ type: types.DELETE_MEMO, payload: data });
         })
@@ -43,7 +43,7 @@ export const deleteMemo = (data) => (dispatch, getState) => {
 };
 export const saveMemo = (data) => (dispatch, getState) => {
     axios
-        .get(`/api/memos/${data.id}/`)
+        .get(`/api/memos/${data.id}/`, data.config)
         .then((res) => {
             const memo = res.data;
             if (data.title)
@@ -51,7 +51,7 @@ export const saveMemo = (data) => (dispatch, getState) => {
             if (data.content)
                 memo.content = data.content;
             axios
-                .put(`/api/memos/${memo.id}/`, memo)
+                .put(`/api/memos/${memo.id}/`, memo, data.config)
                 .then((res) => {
                     dispatch({ type: types.UPDATE_MEMO, payload: res.data });
                 })

@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 # Application definition
 
 INSTALLED_APPS = [
