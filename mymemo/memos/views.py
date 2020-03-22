@@ -15,7 +15,7 @@ def uploadFiles(request):
     folder = '%s/%s/' % (settings.MEDIA_ROOT, id)
     memo = Memo.objects.get(pk=id)
     fileList = []
-    if memo.file_list is not None and not "":
+    if memo.file_list is not None and memo.file_list is not "":
         fileList = json.loads(memo.file_list)
     if not os.path.exists(folder):
         os.mkdir(folder)
@@ -23,9 +23,9 @@ def uploadFiles(request):
         name, ext = os.path.splitext(file.name)
         filename = uuid.uuid4().__str__() + ext
         path = '%s/%s/%s' % (settings.MEDIA_ROOT, id, filename)
-        with open(path, 'wb') as file:
+        with open(path, 'wb') as f:
             for chunk in file.chunks():
-                file.write(chunk)
+                f.write(chunk)
         url = 'download?path=%s/%s&name=%s' % (id, filename, file.name)
         files.append({'name': file.name, 'url': url})
         fileList.append({'name': file.name, 'url': url})

@@ -25,7 +25,7 @@ SECRET_KEY = '26m39jc$6vw26ppx!*#lwj(ya0hifcsp%ryd*n7dq0)e!h*ny0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 # Application definition
