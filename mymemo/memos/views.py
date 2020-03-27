@@ -6,6 +6,7 @@ from .models import Memo
 import os
 import uuid
 import json
+import urllib
 # Create your views here.
 @require_http_methods(["POST"])
 def uploadFiles(request):
@@ -43,7 +44,8 @@ def download(request):
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(
-                fh.read(), content_type="application/octet-stream")
-            response['Content-Disposition'] = 'inline; filename=' + name
+                fh.read(), content_type="multipart/form-data;charset=UTF-8")
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+                urllib.parse.quote(name))
             return response
     raise Http404

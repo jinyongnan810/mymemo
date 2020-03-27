@@ -6,13 +6,14 @@ import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown/with-html'
 import DropToUpload from 'react-drop-to-upload';
 import Axios from 'axios';
+import CodeBlock from '../common/CodeBlock'
 export class Content extends Component {
     static propTypes = {
         currentMemo: PropTypes.object.isRequired,
         searching: PropTypes.string.isRequired,
         saveMemo: PropTypes.func.isRequired,
     }
-    state = { id: null, content: null, editing: false, searching: "", searchingMarked: "" }
+    state = { id: null, content: null, editing: false, searching: "", searchingMarked: "", fullscreen: false }
     componentDidUpdate(preProps) {
         if (preProps.currentMemo != this.props.currentMemo || preProps.currentMemo.content != this.props.currentMemo.content) {
             if (this.props.currentMemo) {
@@ -37,8 +38,8 @@ export class Content extends Component {
             const searching = this.props.searching;
             const reg = new RegExp();
             reg.compile(searching, 'ig');
-            const ltReg = /</g;
-            const gtReg = />/g;
+            const ltReg = /<|\(|\[/g;
+            const gtReg = />|\)|\]/g
             let split = content.split(reg)
             let matches = content.match(reg)
             let marked = ""
@@ -102,9 +103,10 @@ export class Content extends Component {
                     } else {
                         downloadLink = ` [${file.name}](${file.url})`
                     }
-                    let content = $(".memo-editor").val();
-                    content += downloadLink;
-                    $(".memo-editor").val(content)
+                    // let content = $(".memo-editor").val();
+                    // content += downloadLink;
+                    // $(".memo-editor").val(content)
+                    this.insertToCursor(downloadLink)
                 })
             })
             .catch((e) => {
@@ -141,14 +143,101 @@ export class Content extends Component {
         // e.stopPropagation();
         $(".memo-file-drop").removeClass("memo-file-drop-dragenter")
     }
+    onKeyDown = (e) => {
+        var keyCode = e.keyCode || e.which;
+        // allow tab
+        if (keyCode == 9) {
+            e.preventDefault();
+            this.insertToCursor("\t")
+        }
+        // save
+        if (event.ctrlKey || event.metaKey) {
+            if (keyCode == 83) {
+                e.preventDefault();
+                this.toggleEdit();
+            }
+        }
+
+        // color
+        if (event.ctrlKey) {
+            if (keyCode == 84) {
+                e.preventDefault();
+                this.insertColor()
+            }
+        }
+
+        // link
+        if (event.ctrlKey) {
+            if (keyCode == 76) {
+                e.preventDefault();
+                this.insertLink()
+            }
+        }
+
+
+    }
+    toggleFullScreen = () => {
+        $(".row").toggleClass('memo-fullscreen')
+        this.setState({ fullscreen: !this.state.fullscreen })
+    }
+    insertToCursor = (text) => {
+        let textarea = $(".memo-editor")[0]
+        let start = textarea.selectionStart;
+        let end = textarea.selectionEnd;
+
+        $(textarea).val($(textarea).val().substring(0, start)
+            + text
+            + $(textarea).val().substring(end));
+
+        textarea.selectionStart = start + 1
+        textarea.selectionEnd = start + 1;
+    }
+    insertColor = () => {
+        const text1 = "<span style='color:skyblue'>";
+        const text2 = "</span>"
+        const cursorStart = 19
+        const cursorEnd = 26
+        this.insertToCursorSide(text1, text2, cursorStart, cursorEnd)
+    }
+    insertLink = () => {
+        const text1 = "[";
+        const text2 = "]()"
+        const cursorStart = null
+        const cursorEnd = null
+        this.insertToCursorSide(text1, text2, cursorStart, cursorEnd)
+    }
+    insertToCursorSide = (text1, text2, cursorStart, cursorEnd) => {
+        let textarea = $(".memo-editor")[0]
+        let start = textarea.selectionStart;
+        let end = textarea.selectionEnd;
+        let length = end - start;
+
+        $(textarea).val($(textarea).val().substring(0, start)
+            + text1
+            + $(textarea).val().substring(start, end)
+            + text2
+            + $(textarea).val().substring(end));
+        if (cursorStart) {
+            textarea.selectionStart = start + cursorStart
+            textarea.selectionEnd = start + cursorEnd;
+        } else {
+            textarea.selectionStart = start + 1 + length + 2
+            textarea.selectionEnd = textarea.selectionStart
+        }
+
+    }
 
 
     render() {
         return (
             <main className="col-10 ml-auto px-4 memo-container" role="main" onDoubleClick={() => this.toggleEdit()}>
-                <button className="memo-edit-btn btn btn-outline-primary" onClick={() => this.toggleEdit()}>{this.state.editing ? "done" : "edit"}</button>
+                <div className="memo-btns">
+                    <button className="memo-fullscreen-btn btn btn-outline-success" onClick={() => this.toggleFullScreen()}>{this.state.fullscreen ? "cancel fullscreen" : "fullscreen"}</button>
+                    <button className="memo-edit-btn btn btn-outline-primary" onClick={() => this.toggleEdit()}>{this.state.editing ? "done" : "edit"}</button>
+                </div>
+
                 <div className={this.state.editing ? "memo-content-raw memo-content-show" : "memo-content-raw memo-content-hide"}>
-                    <textarea className="memo-editor" disabled={!this.state.editing}>
+                    <textarea className="memo-editor" disabled={!this.state.editing} onKeyDown={e => this.onKeyDown(e)}>
                     </textarea>
                     <DropToUpload onDrop={(files) => this.handleDrop(files)} className="memo-file-drop">
                         <span>Drop file here to upload</span>
@@ -157,7 +246,7 @@ export class Content extends Component {
                 </div>
                 <div className={this.state.editing ? "memo-content memo-content-hide" : "memo-content memo-content-show"}>
                     {console.log(`hi:${this.state.searchingMarked}`)}
-                    <ReactMarkdown source={this.state.searchingMarked} escapeHtml={false} linkTarget='_blank' />
+                    <ReactMarkdown source={this.state.searchingMarked} escapeHtml={false} linkTarget='_blank' renderers={{ code: CodeBlock }} />
                 </div>
 
             </main>

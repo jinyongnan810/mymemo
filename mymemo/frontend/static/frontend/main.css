@@ -1,3 +1,6 @@
+*:focus {
+    outline: none;
+}
 .sidebar {
     position: fixed;
     top: 0px;
@@ -6,6 +9,7 @@
     z-index: 100;
     padding: 48px 0 0;
     box-shadow: inset -1px 0px 0px rgba(0,0,0,0.1);
+    overflow-y: scroll;
 }
 .sidebar-heading {
     font-size: 0.75rem;
@@ -103,11 +107,14 @@
     min-height: 100%;
     padding: 3px;
 }
-.memo-edit-btn {
+.memo-btns {
     position: fixed;
     right: 50px;
     top:70px;
     z-index: 1000;
+}
+.memo-edit-btn,.memo-fullscreen-btn {
+    margin-left: 10px;
 }
 .h100 {
     position: absolute;
@@ -161,4 +168,26 @@ body {
     opacity: 1;
     background-color: rgba(0,0,0,0.2);
     box-shadow:  0 0 5px 5px black !important;
+}
+main,.sidebar  {
+    transition: all 1s;
+}
+.memo-fullscreen main{
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+.memo-fullscreen .sidebar {
+    transform: translatex(-100%);
+    
+}
+/* code */
+.react-syntax-highlighter-line-number {
+    /* background-color: lightgreen; */
+    color:darkorange;
+}
+pre {
+    background-color: lightgoldenrodyellow !important;
+}
+.token{
+    background: none !important;
 }

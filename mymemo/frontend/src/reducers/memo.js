@@ -12,7 +12,7 @@ export default (state = initialState, action) => {
             const sorted = memos.sort((a, b) => {
                 return new Date(b.update_at) - new Date(a.update_at);
             })
-            return { ...state, currentMemo: {}, memos: sorted }
+            return { ...state, currentMemo: sorted[0], memos: sorted }
         }
         case types.ADD_MEMO: {
             const newMemo = action.payload;
