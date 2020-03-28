@@ -1,5 +1,6 @@
 import * as types from "./types"
 import axios from "axios";
+import { createMessage, returnErrors } from './messages'
 export const getMemos = () => (dispatch, getState) => {
     axios
         .get("/api/memos/")//, tokenConfig(getState))
@@ -7,15 +8,7 @@ export const getMemos = () => (dispatch, getState) => {
             dispatch({ type: types.GET_MEMOS, payload: res.data });
         })
         .catch((err) => {
-            console.log("メモ取得エラー")
-            // const error = {
-            //     msg: err.response.data,
-            //     status: err.response.status
-            // };
-            // dispatch({
-            //     type: GET_ERRORS,
-            //     payload: error
-            // });
+            dispatch(returnErrors(err.response.data, err.response.status));
         });
 };
 export const addMemo = (config) => (dispatch, getState) => {
@@ -24,10 +17,10 @@ export const addMemo = (config) => (dispatch, getState) => {
         .post(`/api/memos/`, memo, config)
         .then((res) => {
             dispatch({ type: types.ADD_MEMO, payload: res.data });
+            dispatch(createMessage('memo created!'))
         })
         .catch((err) => {
-            console.log(`err:${JSON.stringify(err)}`)
-            // dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch(returnErrors(err.response.data, err.response.status));
         });
 };
 export const deleteMemo = (data, config) => (dispatch, getState) => {
@@ -35,10 +28,10 @@ export const deleteMemo = (data, config) => (dispatch, getState) => {
         .delete(`/api/memos/${data}/`, config)
         .then((res) => {
             dispatch({ type: types.DELETE_MEMO, payload: data });
+            dispatch(createMessage('memo deleted!'))
         })
         .catch((err) => {
-            console.log(`err:${JSON.stringify(err)}`)
-            // dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch(returnErrors(err.response.data, err.response.status));
         });
 };
 export const saveMemo = (data) => (dispatch, getState) => {
@@ -54,13 +47,13 @@ export const saveMemo = (data) => (dispatch, getState) => {
                 .put(`/api/memos/${memo.id}/`, memo, data.config)
                 .then((res) => {
                     dispatch({ type: types.UPDATE_MEMO, payload: res.data });
+                    dispatch(createMessage('memo updated!'))
                 })
                 .catch((err) => {
-                    console.log(`err:${JSON.stringify(err)}`)
-                    // dispatch(returnErrors(err.response.data, err.response.status));
+                    dispatch(returnErrors(err.response.data, err.response.status));
                 });
         })
         .catch((err) => {
-            // dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch(returnErrors(err.response.data, err.response.status));
         });
 };

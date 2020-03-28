@@ -83,7 +83,6 @@ export class Content extends Component {
                 data.append('file_field', file);
             }
         });
-        console.log(`form:${JSON.stringify(data)}`)
         let config = {
             headers: {
                 "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val(),
@@ -92,7 +91,6 @@ export class Content extends Component {
         Axios.post('/upload', data, config)
             .then((res) => {
                 const files = res.data;
-                console.log(`files:${JSON.stringify(files)}`)
                 files.map(file => {
                     const split = file.name.split('.')
                     const ext = split[split.length - 1]
@@ -110,7 +108,6 @@ export class Content extends Component {
                 })
             })
             .catch((e) => {
-                console.log(`e:${JSON.stringify(e.message)}`)
             })
         // fetch('/upload', {
         //     method: 'POST',
@@ -245,7 +242,6 @@ export class Content extends Component {
 
                 </div>
                 <div className={this.state.editing ? "memo-content memo-content-hide" : "memo-content memo-content-show"}>
-                    {console.log(`hi:${this.state.searchingMarked}`)}
                     <ReactMarkdown source={this.state.searchingMarked} escapeHtml={false} linkTarget='_blank' renderers={{ code: CodeBlock }} />
                 </div>
 
