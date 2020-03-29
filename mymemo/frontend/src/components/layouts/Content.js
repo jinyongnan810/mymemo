@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown/with-html'
 import DropToUpload from 'react-drop-to-upload';
 import Axios from 'axios';
 import CodeBlock from '../common/CodeBlock'
+import { createMessage, returnErrors } from '../../actions/messages'
 export class Content extends Component {
     static propTypes = {
         currentMemo: PropTypes.object.isRequired,
@@ -62,13 +63,8 @@ export class Content extends Component {
             if (!this.state.editing) {
                 $(".memo-editor").val(this.state.content).focus();
             } else {
-                let config = {
-                    headers: {
-                        "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val(),
-                    }
-                }
                 const newContent = $(".memo-editor").val()
-                this.props.saveMemo({ id: this.state.id, content: newContent, config: config });
+                this.props.saveMemo({ id: this.state.id, content: newContent });
                 this.setState({ content: newContent });
             }
             this.setState({ editing: !this.state.editing })
@@ -101,13 +97,12 @@ export class Content extends Component {
                     } else {
                         downloadLink = ` [${file.name}](${file.url})`
                     }
-                    // let content = $(".memo-editor").val();
-                    // content += downloadLink;
-                    // $(".memo-editor").val(content)
                     this.insertToCursor(downloadLink)
+                    dispatch(createMessage('upload success!'))
                 })
             })
-            .catch((e) => {
+            .catch((err) => {
+                dispatch(returnErrors(err.response.data, err.response.status));
             })
         // fetch('/upload', {
         //     method: 'POST',

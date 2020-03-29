@@ -45,22 +45,12 @@ export class List extends Component {
         }
     }
     addMemo = () => {
-        let config = {
-            headers: {
-                "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val(),
-            }
-        }
-        this.props.addMemo(config);
+        this.props.addMemo();
     }
     delMemo = (e, id) => {
         e.stopPropagation();
         if (confirm('Are you sure to delete this memo?')) {
-            let config = {
-                headers: {
-                    "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val(),
-                }
-            }
-            this.props.deleteMemo(id, config);
+            this.props.deleteMemo(id);
         }
     }
     search = (text, e) => {

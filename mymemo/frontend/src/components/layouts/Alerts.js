@@ -11,7 +11,7 @@ export class Alerts extends Component {
         const { alert, alerts } = this.props;
         if (alerts.status != 200 && (alerts.status != previousProps.alerts.status || alerts.msg != previousProps.alerts.msg)) {
             if (alerts.msg) {
-                alert.error('There has been an error');
+                alert.error(`${alerts.status}:${JSON.stringify(alerts.msg)}`);
                 console.error(`${alerts.status}:${JSON.stringify(alerts.msg)}`)
             }
         }
