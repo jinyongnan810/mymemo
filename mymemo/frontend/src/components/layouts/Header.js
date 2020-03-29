@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 export class Header extends Component {
     static propTypes = {
         logout_user: PropTypes.func.isRequired,
-
+        auth: PropTypes.object.isRequired
     };
     render() {
         return (
@@ -15,12 +15,18 @@ export class Header extends Component {
 
                 <ul className="navbar-nav px-3 col-4 text-right">
                     <li className="nav-item text-nowrap">
-                        <a className="nav-link" href="#" onClick={() => { this.props.logout_user() }}>Sign out</a>
+                        {
+                            this.props.auth.isAuthenticated ? <a className="nav-link" href="#" onClick={() => { this.props.logout_user() }}>Sign out</a> : ''
+                        }
+
                     </li>
                 </ul>
             </div>
         )
     }
 }
+const mapStateToAuth = (state) => ({
+    auth: state.auth
+});
 
-export default connect(null, { logout_user })(Header);
+export default connect(mapStateToAuth, { logout_user })(Header);
