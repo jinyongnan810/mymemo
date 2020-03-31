@@ -9,13 +9,15 @@ export default (state = initialState, action) => {
         case GET_ERRORS: {
             return {
                 status: action.payload.status,
-                msg: action.payload.msg
+                msg: action.payload.msg,
+                time: Date.now()
             }
         }
         case CREATE_MESSAGE: {
             return {
                 status: 200,
-                msg: action.payload
+                msg: action.payload,
+                time: Date.now()
             }
         }
         default: return state
