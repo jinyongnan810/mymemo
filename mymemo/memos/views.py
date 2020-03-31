@@ -7,6 +7,7 @@ import os
 import uuid
 import json
 import urllib
+from .background import cleanFiles
 # Create your views here.
 @require_http_methods(["POST"])
 def uploadFiles(request):
@@ -14,10 +15,6 @@ def uploadFiles(request):
     id = data.get('id')
     files = []
     folder = '%s/%s/' % (settings.MEDIA_ROOT, id)
-    memo = Memo.objects.get(pk=id)
-    fileList = []
-    if memo.file_list is not None and memo.file_list is not "":
-        fileList = json.loads(memo.file_list)
     if not os.path.exists(folder):
         os.mkdir(folder)
     for file in request.FILES.getlist('file_field'):
@@ -29,10 +26,6 @@ def uploadFiles(request):
                 f.write(chunk)
         url = 'download?path=%s/%s&name=%s' % (id, filename, file.name)
         files.append({'name': file.name, 'url': url})
-        fileList.append({'name': file.name, 'url': url})
-    fileListJson = json.dumps(fileList)
-    memo.file_list = fileListJson
-    memo.save()
     return JsonResponse(files, safe=False)
 
 
@@ -49,3 +42,8 @@ def download(request):
                 urllib.parse.quote(name))
             return response
     raise Http404
+
+
+def clean(request):
+    cleanFiles(schedule=1)
+    return HttpResponse('cleaned')

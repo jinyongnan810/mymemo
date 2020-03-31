@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'frontend',
     'accounts',
-    'knox'
+    'knox',
+    'background_task',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
