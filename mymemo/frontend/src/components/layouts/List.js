@@ -9,14 +9,14 @@ import * as types from "../../actions/types"
 export class List extends Component {
     static propTypes = {
         memos: PropTypes.array.isRequired,
-        currentMemo: PropTypes.object.isRequired,
+        currentMemo: PropTypes.object,
         getMemos: PropTypes.func.isRequired,
         saveMemo: PropTypes.func.isRequired,
     }
     state = { currentId: null, search: null, marking: {} }
     componentDidUpdate(preProps) {
         if (preProps.currentMemo != this.props.currentMemo) {
-            this.setState({ currentId: this.props.currentMemo.id })
+            this.setState({ currentId: this.props.currentMemo ? this.props.currentMemo.id : null })
         }
     }
     componentDidMount() {

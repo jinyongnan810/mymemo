@@ -10,12 +10,15 @@ import CodeBlock from '../common/CodeBlock'
 import { createMessage, returnErrors } from '../../actions/messages'
 export class Content extends Component {
     static propTypes = {
-        currentMemo: PropTypes.object.isRequired,
+        currentMemo: PropTypes.object,
         searching: PropTypes.string.isRequired,
         saveMemo: PropTypes.func.isRequired,
     }
     state = { id: null, content: null, editing: false, searching: "", searchingMarked: "", fullscreen: false }
     componentDidUpdate(preProps) {
+        if (!this.props.currentMemo) {
+            return
+        }
         if (preProps.currentMemo != this.props.currentMemo || preProps.currentMemo.content != this.props.currentMemo.content) {
             if (this.props.currentMemo) {
                 if (this.state.editing) {
@@ -34,29 +37,29 @@ export class Content extends Component {
         }
     }
     getMarked = () => {
-        const content = this.props.currentMemo.content;
-        if (this.props.searching && content) {
-            const searching = this.props.searching;
-            const reg = new RegExp();
-            reg.compile(searching, 'ig');
-            const ltReg = /<|\(|\[/g;
-            const gtReg = />|\)|\]/g
-            let split = content.split(reg)
-            let matches = content.match(reg)
-            let marked = ""
-            for (let i = 0; i < split.length - 1; i++) {
-                const ltCount = split[i].match(ltReg);
-                const gtCount = split[i].match(gtReg);
-                if ((ltCount != null && gtCount != null && ltCount.length != gtCount.length) || (ltCount == null && gtCount == null))
-                    marked += split[i] + `<span class="memo-marking-word">${matches[i]}</span>`
-                else
-                    marked += split[i] + matches[i]
-            }
-            marked += split[split.length - 1]
-            this.setState({ searchingMarked: marked });
-        } else {
-            this.setState({ searchingMarked: content });
-        }
+        const content = this.props.currentMemo ? this.props.currentMemo.content : '';
+        // if (this.props.searching && content) {
+        //     const searching = this.props.searching;
+        //     const reg = new RegExp();
+        //     reg.compile(searching, 'ig');
+        //     const ltReg = /<|\(|\[/g;
+        //     const gtReg = />|\)|\]/g
+        //     let split = content.split(reg)
+        //     let matches = content.match(reg)
+        //     let marked = ""
+        //     for (let i = 0; i < split.length - 1; i++) {
+        //         const ltCount = split[i].match(ltReg);
+        //         const gtCount = split[i].match(gtReg);
+        //         if ((ltCount != null && gtCount != null && ltCount.length != gtCount.length) || (ltCount == null && gtCount == null))
+        //             marked += split[i] + `<span class="memo-marking-word">${matches[i]}</span>`
+        //         else
+        //             marked += split[i] + matches[i]
+        //     }
+        //     marked += split[split.length - 1]
+        //     this.setState({ searchingMarked: marked });
+        // } else {
+        this.setState({ searchingMarked: content });
+        // }
     }
     toggleEdit = () => {
         if (this.state.id) {

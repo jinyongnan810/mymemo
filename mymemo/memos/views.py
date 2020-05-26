@@ -7,7 +7,7 @@ import os
 import uuid
 import json
 import urllib
-from .background import cleanFiles
+# from .background import cleanFiles
 # Create your views here.
 @require_http_methods(["POST"])
 def uploadFiles(request):
@@ -45,5 +45,5 @@ def download(request):
 
 
 def clean(request):
-    cleanFiles(schedule=1)
+    # cleanFiles(schedule=1)
     return HttpResponse('cleaned')

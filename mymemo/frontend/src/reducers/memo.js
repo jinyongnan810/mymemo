@@ -9,6 +9,10 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case types.GET_MEMOS: {
             const memos = action.payload;
+            console.log(memos)
+            if (!memos || memos.length == 0) {
+                return { ...state, currentMemo: null, memos: [] }
+            }
             const sorted = memos.sort((a, b) => {
                 return new Date(b.update_at) - new Date(a.update_at);
             })

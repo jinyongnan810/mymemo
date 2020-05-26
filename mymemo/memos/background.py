@@ -1,12 +1,14 @@
 import os
 import json
 import re
-from background_task import background
+# from background_task import background
 from .models import Memo
 from django.conf import settings
 import shutil
 import datetime
-@background(schedule=10)
+# @background(schedule=10)
+
+
 def cleanFiles():
     print('cleaning', datetime.datetime.now())
     folders = os.listdir(settings.MEDIA_ROOT)

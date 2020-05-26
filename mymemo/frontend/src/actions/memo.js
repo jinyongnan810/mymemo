@@ -9,7 +9,7 @@ export const getMemos = () => (dispatch, getState) => {
             dispatch({ type: types.GET_MEMOS, payload: res.data });
         })
         .catch((err) => {
-            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch(returnErrors(err.response ? err.response.data : 'unknown error', err.response ? err.response.status : 500));
         });
 };
 export const addMemo = () => (dispatch, getState) => {

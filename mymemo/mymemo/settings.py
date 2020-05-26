@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'frontend',
     'accounts',
     'knox',
-    'background_task',
+    # 'background_task',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
@@ -82,10 +82,19 @@ WSGI_APPLICATION = 'mymemo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'mymemo',
+        'CLIENT': {
+            'host': 'mongodb+srv://jinyongnan:jinyongnan@cluster0-xk5om.gcp.mongodb.net/mymemo?retryWrites=true&ssl=true&ssl_cert_reqs=CERT_NONE&w=majority'
+        },
     }
 }
 

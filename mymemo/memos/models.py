@@ -6,7 +6,6 @@ import uuid
 
 
 class Memo(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
     content = models.TextField(null=True, blank=True)
     file_list = models.TextField(null=True, blank=True)
