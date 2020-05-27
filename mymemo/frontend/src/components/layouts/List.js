@@ -13,11 +13,15 @@ export class List extends Component {
         getMemos: PropTypes.func.isRequired,
         saveMemo: PropTypes.func.isRequired,
     }
-    state = { currentId: null, search: null, marking: {} }
+    state = { currentId: null, search: null, marking: {}, memos: [] }
     componentDidUpdate(preProps) {
         if (preProps.currentMemo != this.props.currentMemo) {
             this.setState({ currentId: this.props.currentMemo ? this.props.currentMemo.id : null })
         }
+        if (preProps.memos != this.props.memos) {
+            this.setState({ memos: this.props.memos })
+        }
+
     }
     componentDidMount() {
         this.props.getMemos();
@@ -25,24 +29,23 @@ export class List extends Component {
     selectMemo = (id) => {
         store.dispatch({ type: types.SELECT_MEMO, payload: id })
     }
-    startEditTitle = (e, id) => {
-        e.stopPropagation();
-        const newState = {};
-        newState[id + '-titleEdit'] = true
-        this.setState(newState)
-    }
-    endEditTitle = (e, id) => {
-        e.stopPropagation();
-        const newState = {};
-        newState[id + '-titleEdit'] = false
-        this.setState(newState);
-        const memo = this.props.memos.find(memo => memo.id == id);
-        const title = $(`#memo-${id}`).html().replace('<br>', '').trim();
+    onChange = (e, id) => {
+        const title = e.target.value
+
         if (title) {
-            this.props.saveMemo({ id: memo.id, title: title });
-        } else {
-            $(`#memo-${id}`).html(memo.title);
+            const memos = this.state.memos.slice()
+            memos.map(memo => {
+                if (memo.id == id) {
+                    memo.title = title
+                }
+            })
+            this.setState({ memos: memos })
         }
+    }
+    editTitle = (e, id) => {
+        const title = e.target.value
+        this.props.saveMemo({ id: id, title: title });
+
     }
     addMemo = () => {
         this.props.addMemo();
@@ -87,20 +90,10 @@ export class List extends Component {
 
 
                         {
-                            this.props.memos.map(memo => (
+                            this.state.memos.map(memo => (
                                 <li className={memo.id == this.state.currentId ? ("memo-active memo-item px-3 " + (this.state.marking[memo.id] ? "memo-marking" : "")) : ("memo-item px-3 " + (this.state.marking[memo.id] ? "memo-marking" : ""))} key={memo.id} id={memo.id} onClick={() => this.selectMemo(memo.id)}>
-                                    <a className="memo-title" id={"memo-" + memo.id} href="#" contentEditable={this.state[memo.id + '-titleEdit'] ? 'true' : 'false'} >
-                                        {memo.title}
-                                    </a>
-                                    {
-                                        this.state[memo.id + '-titleEdit'] ?
-                                            (<div className="edit-title-done" onClick={(e) => this.endEditTitle(e, memo.id)}>done</div>)
-                                            : (<div className="edit-title" onClick={(e) => this.startEditTitle(e, memo.id)} >edit</div>)
-                                    }
-
+                                    <input className="memo-title" id={"memo-" + memo.id} value={memo.title} onChange={e => { this.onChange(e, memo.id) }} onBlur={(e) => { this.editTitle(e, memo.id) }} />
                                     <div className="memo-delete" onClick={(e) => { this.delMemo(e, memo.id) }}>×</div>
-
-
                                 </li>
                             ))
                         }
