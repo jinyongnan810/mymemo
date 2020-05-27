@@ -2,7 +2,7 @@ import * as types from "../actions/types";
 
 const initialState = {
     memos: [],
-    currentMemo: {},
+    currentMemo: null,
     searching: ""
 };
 export default (state = initialState, action) => {
@@ -43,21 +43,11 @@ export default (state = initialState, action) => {
         }
         case types.DELETE_MEMO: {
             const id = action.payload;
-            const oldMemos = state.memos.slice();
-            const index = oldMemos.findIndex(memo => {
-                if (memo.id == id) {
-                    return true;
-                }
-                return false;
-            })
-            if (index > -1) {
-                oldMemos.splice(index, 1);
-            }
-
+            const memos = state.memos.slice();
             if (state.currentMemo.id == id) {
-                state.currentMemo = {}
+                state.currentMemo = null
             }
-            return { ...state, memos: oldMemos, currentMemo: state.currentMemo };
+            return { ...state, memos: memos.filter(memo => memo.id != id), currentMemo: state.currentMemo };
         }
         case types.SELECT_MEMO: {
             const id = action.payload;

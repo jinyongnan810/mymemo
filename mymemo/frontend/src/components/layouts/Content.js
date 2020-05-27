@@ -115,6 +115,7 @@ export class Content extends Component {
     }
     componentDidMount() {
         const filedrop = document.querySelector(".memo-file-drop");
+        if (!filedrop) return
         const dom = ReactDOM.findDOMNode(filedrop)
         dom.addEventListener('dragenter', this.onDragEnter)
         dom.addEventListener('dragover', this.onDragEnter)
@@ -225,25 +226,28 @@ export class Content extends Component {
 
     render() {
         return (
-            <main className="col-10 ml-auto px-4 memo-container" role="main" onDoubleClick={() => this.toggleEdit()}>
-                <div className="memo-btns">
-                    <button className="memo-fullscreen-btn btn btn-outline-success" onClick={() => this.toggleFullScreen()}>{this.state.fullscreen ? "cancel fullscreen" : "fullscreen"}</button>
-                    <button className="memo-edit-btn btn btn-outline-primary" onClick={() => this.toggleEdit()}>{this.state.editing ? "done" : "edit"}</button>
-                </div>
+            this.props.currentMemo ?
+                (<main className="col-10 ml-auto px-4 memo-container" role="main" onDoubleClick={() => this.toggleEdit()}>
+                    <div className="memo-btns">
+                        <button className="memo-fullscreen-btn btn btn-outline-success" onClick={() => this.toggleFullScreen()}>{this.state.fullscreen ? "cancel fullscreen" : "fullscreen"}</button>
+                        <button className="memo-edit-btn btn btn-outline-primary" onClick={() => this.toggleEdit()}>{this.state.editing ? "done" : "edit"}</button>
+                    </div>
 
-                <div className={this.state.editing ? "memo-content-raw memo-content-show" : "memo-content-raw memo-content-hide"}>
-                    <textarea className="memo-editor" disabled={!this.state.editing} onKeyDown={e => this.onKeyDown(e)}>
-                    </textarea>
-                    <DropToUpload onDrop={(files) => this.handleDrop(files)} className="memo-file-drop">
-                        <span>Drop file here to upload</span>
-                    </DropToUpload>
+                    <div className={this.state.editing ? "memo-content-raw memo-content-show" : "memo-content-raw memo-content-hide"}>
+                        <textarea className="memo-editor" disabled={!this.state.editing} onKeyDown={e => this.onKeyDown(e)}>
+                        </textarea>
+                        <DropToUpload onDrop={(files) => this.handleDrop(files)} className="memo-file-drop">
+                            <span>Drop file here to upload</span>
+                        </DropToUpload>
 
-                </div>
-                <div className={this.state.editing ? "memo-content memo-content-hide" : "memo-content memo-content-show"}>
-                    <ReactMarkdown source={this.state.searchingMarked} escapeHtml={false} linkTarget='_blank' renderers={{ code: CodeBlock }} />
-                </div>
+                    </div>
+                    <div className={this.state.editing ? "memo-content memo-content-hide" : "memo-content memo-content-show"}>
+                        <ReactMarkdown source={this.state.searchingMarked} escapeHtml={false} linkTarget='_blank' renderers={{ code: CodeBlock }} />
+                    </div>
 
-            </main>
+                </main>)
+                :
+                (<main></main>)
         )
     }
 }
