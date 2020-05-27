@@ -13,7 +13,7 @@ export const getMemos = () => (dispatch, getState) => {
         });
 };
 export const addMemo = () => (dispatch, getState) => {
-    const memo = { title: 'temp title', content: '' }
+    const memo = { title: 'new memo', content: '### title' }
     axios
         .post(`/api/memos/`, memo, tokenConfig(getState, true))
         .then((res) => {
