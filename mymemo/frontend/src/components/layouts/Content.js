@@ -8,6 +8,7 @@ import DropToUpload from 'react-drop-to-upload';
 import Axios from 'axios';
 import CodeBlock from '../common/CodeBlock'
 import { createMessage, returnErrors } from '../../actions/messages'
+import store from "../../store";
 export class Content extends Component {
     static propTypes = {
         currentMemo: PropTypes.object,
@@ -34,6 +35,9 @@ export class Content extends Component {
         }
         if (this.props.searching != preProps.searching) {
             this.getMarked();
+        }
+        if (preProps.currentMemo == null) {
+            this.dragEvents()
         }
     }
     getMarked = () => {
@@ -101,11 +105,11 @@ export class Content extends Component {
                         downloadLink = ` [${file.name}](${file.url})`
                     }
                     this.insertToCursor(downloadLink)
-                    dispatch(createMessage('upload success!'))
+                    store.dispatch(createMessage('upload success!'))
                 })
             })
             .catch((err) => {
-                dispatch(returnErrors(err.response.data, err.response.status));
+                store.dispatch(returnErrors(err.response.data, err.response.status));
             })
         // fetch('/upload', {
         //     method: 'POST',
@@ -113,7 +117,7 @@ export class Content extends Component {
         // });
         $(".memo-file-drop").removeClass("memo-file-drop-dragenter")
     }
-    componentDidMount() {
+    dragEvents = () => {
         const filedrop = document.querySelector(".memo-file-drop");
         if (!filedrop) return
         const dom = ReactDOM.findDOMNode(filedrop)
@@ -131,6 +135,11 @@ export class Content extends Component {
         const textareaDom = ReactDOM.findDOMNode(textarea)
         textareaDom.addEventListener('focus', this.onDragLeave)
     }
+
+    componentDidMount() {
+
+    }
+
     onDragEnter = (e) => {
         // e.stopPropagation();
         $(".memo-file-drop").addClass("memo-file-drop-dragenter")
