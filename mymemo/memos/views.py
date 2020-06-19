@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
+from .serializer import MemoSerializer
 from .models import Memo
 import os
 import uuid
@@ -48,3 +49,9 @@ def clean(request):
     # cleanFiles(schedule=1)
     cleanFiles()
     return HttpResponse('cleaned')
+
+
+def publicApi(request):
+    data = MemoSerializer(
+        Memo.objects.all().filter(owner_id=1), many=True).data
+    return JsonResponse(data, safe=False)

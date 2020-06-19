@@ -100,7 +100,7 @@ export class Content extends Component {
                     const isImage = ['jpg', 'jpeg', 'png'].indexOf(ext) > -1
                     let downloadLink;
                     if (isImage) {
-                        downloadLink = ` ![${file.name}](${file.url})`
+                        downloadLink = ` ![${file.name}](${file.url} "${file.name}")`
                     } else {
                         downloadLink = ` [${file.name}](${file.url})`
                     }
